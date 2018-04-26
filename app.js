@@ -36,7 +36,7 @@ let dbBooks = 'Books';
 MongoClient.connect(process.env.MONGODB_URI, function (err, client) {
   assert.equal(null, err);
   console.log("Connected successfully to server");
-  const db = client.db('BookClub');
+  const db = client.db('heroku_16dcptlw');
   dbUser = db.collection(dbUser);
   dbBooks = db.collection(dbBooks);
 });
