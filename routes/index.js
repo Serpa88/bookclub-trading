@@ -6,7 +6,7 @@ router.get('/', function(req, res, next) {
   console.log(req.user);
   let properties = { title: 'Express' };
   if (req.user) {
-    properties.user = req.user;
+    properties.user = req.user.value;
   }
   res.render('index', properties);
 });
