@@ -28,6 +28,14 @@ passport.use(new githubStrategy({
     });
 }));
 
+passport.serializeUser(function (user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function (user, done) {
+  done(null, user);
+});
+
 // Database Name Turned into collection object(s) once connected
 let dbUser = 'Users';
 let dbBooks = 'Books';
