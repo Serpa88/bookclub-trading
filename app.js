@@ -33,12 +33,12 @@ let dbUser = 'Users';
 let dbBooks = 'Books';
 
 // Use connect method to connect to the server
-MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
+MongoClient.connect(process.env.MONGODB_URI, function (err, client) {
   assert.equal(null, err);
   console.log("Connected successfully to server");
-
-  dbUser = database.collection(dbUser);
-  dbBooks = database.collection(dbBooks);
+  const db = client.db('BookClub');
+  dbUser = db.collection(dbUser);
+  dbBooks = db.collection(dbBooks);
 });
 
 var indexRouter = require('./routes/index');
