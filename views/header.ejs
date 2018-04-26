@@ -19,11 +19,11 @@
                     <%= user.githubName %>
                         <img src="<%= user.avatar_url %>>" height="30" width="30">
                 </a>
-                <a href="/logout">
+                <a href="/auth/github/logout">
                     <img src="images/logoff.svg" height="23" width="23">
                 </a>
                 <% } else { %>
-                    <a href="/login">
+                    <a href="/auth/github/login">
                         <img src="images/login.png" height="38.5" width="224">
                     </a>
                     <% } %>

@@ -18,8 +18,8 @@ passport.use(new githubStrategy({
       githubId: profile.id
     }, {
       $setOnInsert: {
-        avatar_url: profile.avatar_url,
-        githubName: profile.login
+        avatar_url: profile.photos[0].value,
+        githubName: profile.username
       }
     }, {
       upsert: true

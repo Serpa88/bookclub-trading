@@ -6,4 +6,6 @@ router.get('/callback', passport.authenticate('github', { failureRedirect: '/' }
     res.redirect('/account');
 });
 
+router.get('/login', passport.authenticate('github'));
+
 module.exports = router;
