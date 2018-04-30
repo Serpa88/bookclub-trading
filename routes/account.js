@@ -16,7 +16,7 @@ function main(dbBooks) {
     router.post('/removebook', ensureLogged, function (req, res, next) {
         const Books = dbBooks();
         const query = {
-            user:req.user.value._id,
+            user: new Books.ObjectID(req.user.value._id),
             _id: new Books.ObjectID(req.body.bookId)
         };
         Books.deleteOne(query, function (err, result) {

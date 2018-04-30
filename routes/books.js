@@ -4,36 +4,45 @@ module.exports = function (dbBooks, dbTrade) {
     const tools = require('../tools');
 
     router.get('/all', function (req, res, next) {
-        let agg;
+        const Books = dbBooks();
         if (req.user) {
-            agg = {
-                $lookup: {
-                    from: 'Trades',
-                    localField: '_id',
-                    foreignField: 'BookId',
-                    pipeline: [
-                        {
-                            $match: {
-                                userId: req.user.value._id
+            const userId = req.user.value._id;
+            Books
+                .aggregate()
+                .lookup({
+                        from: 'Trades',
+                        let: {
+                            book_id: '$_id'
+                        },
+                        pipeline: [
+                            {
+                                $match: {
+                                    userId: new Books.ObjectID(userId),
+                                    $expr: {
+                                        $eq: ["$bookId", '$$book_id']
+                                    }
+                                }
                             }
+                        ],
+                        as: 'Trades'
+                    })
+                    .match({
+                        user: {
+                            $ne: ObjectId(userId)
                         }
-                    ],
-                    as: 'Trades'
-                }
-            };
-        }
-        else {
-            agg = {};
-        }
-        dbBooks().aggregate([agg], function (err, cursor) {
-            if (err) return next(err);
-            cursor.toArray(function (err, result) {
-                if (err) return next(err);
-                console.log(result);
-                res.render('books', tools.addUser({ books: result }, req.user));
-            });
+                    })
+                    .toArray(function (err, result) {
+                        if (err) 
+                            return next(err);
+                        console.log(result);
+                        res.render('books', tools.addUser({
+                            books: result
+                        }, req.user));
+                    });
+            } else {
+                Books.find({});
+            }
         });
-    });
 
     return router;
 }
