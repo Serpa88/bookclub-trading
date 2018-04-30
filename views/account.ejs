@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<%- include('head') -%>
+
+    <body>
+        <%- include('header') -%>
+            <div class="container" style="padding-top: 10px;">
+                <form action="/account/newbook" method="POST">
+                    <label>Add my book:</label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="title" placeholder="The Catcher in the Rye...">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-success" type="submit">Add</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+    </body>
+
+</html>

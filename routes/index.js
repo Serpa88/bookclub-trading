@@ -1,14 +1,11 @@
 var express = require('express');
 var router = express.Router();
+var tools = require('../tools');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   console.log(req.user);
-  let properties = { title: 'Express' };
-  if (req.user) {
-    properties.user = req.user.value;
-  }
-  res.render('index', properties);
+  res.render('index', tools.addUser({ title: 'Express' }, req.user));
 });
 
 module.exports = router;

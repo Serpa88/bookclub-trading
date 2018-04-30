@@ -39,6 +39,7 @@ passport.deserializeUser(function (user, done) {
 // Database Name Turned into collection object(s) once connected
 let dbUser = 'Users';
 let dbBooks = 'Books';
+let dbTrade = 'Trades';
 
 // Use connect method to connect to the server
 MongoClient.connect(process.env.MONGODB_URI, function (err, client) {
@@ -47,6 +48,7 @@ MongoClient.connect(process.env.MONGODB_URI, function (err, client) {
   const db = client.db('heroku_16dcptlw');
   dbUser = db.collection(dbUser);
   dbBooks = db.collection(dbBooks);
+  dbTrade = db.collection(dbTrade);
 });
 
 var indexRouter = require('./routes/index');
@@ -71,6 +73,8 @@ app.use(passport.session());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth/github', require('./routes/auth'));
+app.use('/books', require('./routes/books')(() => dbBooks, dbTrade));
+app.use('/account', require('./routes/account')(() => dbBooks));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
