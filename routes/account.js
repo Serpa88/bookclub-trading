@@ -16,9 +16,8 @@ function main(dbBooks) {
         const Books = dbBooks();
         const query = {
             user:req.user.value._id,
-            "_id.$oid": req.body.bookId
+            _id: new Books.ObjectID(req.body.bookId)
         };
-        console.log(query);
         Books.deleteOne(query, function (err, result) {
             res.redirect('/account');
         })

@@ -3,7 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const MongoClient = require('mongodb').MongoClient;
+const mongo = require('mongodb');
+const MongoClient = mongo.MongoClient;
 const assert = require('assert');
 const passport = require('passport');
 const githubStrategy = require('passport-github').Strategy;
@@ -74,11 +75,11 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth/github', require('./routes/auth'));
 app.use('/books', require('./routes/books')(() => {
-  dbBooks.ObjectID = MongoClient.ObjectID;
+  dbBooks.ObjectID = mongo.ObjectID;
   return dbBooks;
 }, dbTrade));
 app.use('/account', require('./routes/account')(() => {
-  dbBooks.ObjectID = MongoClient.ObjectID;
+  dbBooks.ObjectID = mongo.ObjectID;
   return dbBooks;
 }));
 
