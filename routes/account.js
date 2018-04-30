@@ -51,6 +51,8 @@ function main(dbBooks) {
                         console.log(error);
                     }
                 });
+        } else {
+            res.redirect('/account');
         }
     });
 
