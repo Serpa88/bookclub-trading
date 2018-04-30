@@ -73,7 +73,7 @@ app.use(passport.session());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth/github', require('./routes/auth'));
-app.use('/books', require('./routes/books')(() => dbBooks, dbTrade));
+app.use('/books', require('./routes/books')(() => Object.defineProperty(dbBooks, ObjectID, { value: MongoClient.ObjectID }), dbTrade));
 app.use('/account', require('./routes/account')(() => dbBooks));
 
 // catch 404 and forward to error handler
