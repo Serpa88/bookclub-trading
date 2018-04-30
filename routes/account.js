@@ -5,7 +5,8 @@ function main(dbBooks) {
     const books = require('google-books-search');
 
     router.get('/', ensureLogged, function (req, res, next) {
-        dbBooks().find({ user: req.user.value._id })
+        const Books = dbBooks();
+        Books.find({ user: new Books.ObjectID(req.user.value._id) })
         .toArray(function (err, results) {
             if (err) return next(err);
             res.render('account', tools.addUser({books: results}, req.user));
@@ -26,6 +27,7 @@ function main(dbBooks) {
     router.post('/newbook', ensureLogged, function (req, res) {
         const title = req.body.title;
         if (!String.isNullOrWhitespace(title)) {
+            const Books = dbBooks();
             books
                 .search(title, function (error, results) {
                     if (!error) {
@@ -39,9 +41,9 @@ function main(dbBooks) {
                                 description: closestResult.description,
                                 thumbnail: closestResult.thumbnail,
                                 title: closestResult.title,
-                                user: req.user.value._id
+                                user: new Books.ObjectID(req.user.value._id)
                             };
-                            dbBooks().insertOne(doc, function (err, result) {
+                            Books.insertOne(doc, function (err, result) {
                                 res.redirect('/account');
                             });
                         }
