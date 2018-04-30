@@ -14,10 +14,12 @@ function main(dbBooks) {
 
     router.post('/removebook', ensureLogged, function (req, res, next) {
         const Books = dbBooks();
-        Books.deleteOne({
+        const query = {
             user: new Books.ObjectID(req.user.value._id),
-            _id: new Books.ObjectID(req.body.bookId)
-        }, function (err, result) {
+            "_id.$oid": new Books.ObjectID(req.body.bookId)
+        };
+        console.log(query);
+        Books.deleteOne(query, function (err, result) {
             res.redirect('/account');
         })
     });
