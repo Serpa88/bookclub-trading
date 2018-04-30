@@ -4,8 +4,12 @@ function main(dbBooks) {
     const tools = require('../tools');
     const books = require('google-books-search');
 
-    router.get('/', ensureLogged, function (req, res) {
-        res.render('account', tools.addUser({}, req.user));
+    router.get('/', ensureLogged, function (req, res, next) {
+        dbBooks().find({ user: req.user.value._id })
+        .toArray(function (err, results) {
+            if (err) return next(err);
+            res.render('account', tools.addUser({books: results}, req.user));
+        });
     });
 
     router.post('/newbook', ensureLogged, function (req, res) {
