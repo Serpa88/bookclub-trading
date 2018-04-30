@@ -13,9 +13,10 @@ function main(dbBooks) {
     });
 
     router.post('/removebook', ensureLogged, function (req, res, next) {
-        dbBooks().deleteOne({
-            user: new dbBooks().ObjectID(req.user.value._id),
-            _id: new dbBooks().ObjectID(req.body.bookId)
+        const Books = dbBooks();
+        Books.deleteOne({
+            user: new Books.ObjectID(req.user.value._id),
+            _id: new Books.ObjectID(req.body.bookId)
         }, function (err, result) {
             res.redirect('/account');
         })
