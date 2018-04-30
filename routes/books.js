@@ -46,7 +46,7 @@ module.exports = function (dbBooks, dbTrade) {
                         if (err) 
                             return next(err);
                         else 
-                            res.render('books', {books: result});
+                            res.render('books', {books: results});
                         }
                     );
             }
