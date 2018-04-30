@@ -25,7 +25,7 @@ module.exports = function (dbBooks, dbTrade) {
         else {
             agg = {};
         }
-        dbBooks.aggregate([agg], function (err, cursor) {
+        dbBooks().aggregate([agg], function (err, cursor) {
             if (err) return next(err);
             cursor.toArray(function (err, result) {
                 if (err) return next(err);
