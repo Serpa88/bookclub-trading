@@ -6,7 +6,7 @@ module.exports = function (dbBooks, dbTrade) {
     router.get('/all', function (req, res, next) {
         const Books = dbBooks();
         if (req.user) {
-            const userId = req.user.value._id;
+            const userId = new Books.ObjectID(req.user.value._id);
             Books
                 .aggregate()
                 .lookup({
@@ -17,7 +17,7 @@ module.exports = function (dbBooks, dbTrade) {
                         pipeline: [
                             {
                                 $match: {
-                                    userId: new Books.ObjectID(userId),
+                                    userId: userId,
                                     $expr: {
                                         $eq: ["$bookId", '$$book_id']
                                     }
@@ -28,7 +28,7 @@ module.exports = function (dbBooks, dbTrade) {
                     })
                     .match({
                         user: {
-                            $ne: ObjectId(userId)
+                            $ne: userId
                         }
                     })
                     .toArray(function (err, result) {
