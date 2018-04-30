@@ -40,9 +40,17 @@ module.exports = function (dbBooks, dbTrade) {
                         }, req.user));
                     });
             } else {
-                Books.find({});
+                Books
+                    .find({})
+                    .toArray(function (err, results) {
+                        if (err) 
+                            return next(err);
+                        else 
+                            res.render('books', {books: result});
+                        }
+                    );
             }
         });
 
-    return router;
-}
+        return router;
+    }
