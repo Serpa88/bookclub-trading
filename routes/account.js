@@ -12,6 +12,15 @@ function main(dbBooks) {
         });
     });
 
+    router.post('/removebook', ensureLogged, function (req, res, next) {
+        dbBooks().deleteOne({
+            user: req.user.value._id,
+            _id: req.body.bookId
+        }, function (err, result) {
+            res.redirect('/account');
+        })
+    });
+
     router.post('/newbook', ensureLogged, function (req, res) {
         const title = req.body.title;
         if (!String.isNullOrWhitespace(title)) {

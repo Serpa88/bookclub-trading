@@ -20,9 +20,13 @@
                             <div class="card justify-content-center" style="width: 8rem;margin: auto">
                                 <img class="card-img-top" src="<%= books[i].thumbnail %>">
                                 <div class="card-body">
-                                    <p class="card-text">
-                                        <%= books[i].title %>
-                                    </p>
+                                    <form action="/account/removebook" method="POST">
+                                        <p class="card-title">
+                                            <%= books[i].title %>
+                                        </p>
+                                        <input type="hidden" name="bookId" value="<%= books[i]._id %>">
+                                        <a href="#" class="btn btn-danger" type="submit">Delete</a>
+                                    </form>
                                 </div>
                             </div>
                         </div>
