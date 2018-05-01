@@ -17,7 +17,7 @@ module.exports = function (dbBooks, dbTrade) {
                         pipeline: [
                             {
                                 $match: {
-                                    userId: userId,
+                                    user: userId,
                                     $expr: {
                                         $eq: ["$bookId", '$$book_id']
                                     }
