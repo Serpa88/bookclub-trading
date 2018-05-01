@@ -13,7 +13,7 @@ function main(dbBooks, dbTrade) {
             .toArray(function (err, results) {
                 if (err) 
                     return next(err);
-                res.render('account', tools.addUser({
+                res.render('account', addUser({
                     books: results
                 }, req.user));
             });
