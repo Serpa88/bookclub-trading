@@ -1,7 +1,7 @@
 function main(dbBooks, dbTrade) {
     const express = require('express');
     const router = express.Router();
-    const tools = require('../tools');
+    const {addUser, ensureLogged} = require('../tools');
     const books = require('google-books-search');
 
     router.get('/', ensureLogged, function (req, res, next) {
@@ -89,10 +89,3 @@ function main(dbBooks, dbTrade) {
     return router;
 }
 module.exports = main;
-
-function ensureLogged(req, res, next) {
-    if (!req.user) 
-        res.redirect('/');
-    else 
-        next();
-    }

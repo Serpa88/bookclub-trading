@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<%- include('head') -%>
+
+    <body>
+        <%- include('header') -%>
+            <div class="container">
+                <div class="card-deck">
+                    <% for (var i = 0; i < trades.length; i++) { %>
+                        <div class="card">
+                            <img class="card-img-top" src="<%= trades[i].Books[0].thumbnail %>" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title"><%= trades[i].Books[0].title %></h5>
+                                <p class="card-text"><%= trades[i].Books[0].description %></p>
+                            </div>
+                            <div class="card-footer">
+                                <small class="text-muted">Trade from <%= trades[i].User[0].githubName %><img src="<%= trades[i].User[0].avatar_url %>" width="5%"></small>
+                            </div>
+                        </div>
+                        <% } %>
+                </div>
+            </div>
+    </body>
+
+</html>
