@@ -32,7 +32,7 @@ function main(dbBooks, dbTrade) {
         }, function (err, result) {
             if (err) return next(err);
             if (!result) return res.redirect('/books/all');
-            dbTrade.insertOne({ bookId, user: new Books.ObjectID(req.user.value._id) });
+            dbTrade().insertOne({ bookId, user: new Books.ObjectID(req.user.value._id) });
         });
     });
 
