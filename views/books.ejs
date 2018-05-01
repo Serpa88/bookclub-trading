@@ -17,13 +17,15 @@
                                     <%= books[i].description %>
                                 </p>
                                 <% if (hasOwnProperty('user')) { %>
-                                    <input type="hidden" name="bookId" value="<%= books[i]._id %>">
-                                    <button href="#" class="btn btn-warning" type="submit">Trade</button>
-                                    <% } else if (books[i].Trades && books[i].Trades.length > 0) { %>
+                                    <% if (books[i].Trades && books[i].Trades.length > 0) { %>
                                         <input type="hidden" name="bookId" value="<%= books[i]._id %>">
                                         <input type="hidden" name="cancel" value="true">
                                         <button href="#" class="btn btn-danger" type="submit">Cancel Trade</button>
-                                        <% } %>
+                                    <% } else { %>
+                                    <input type="hidden" name="bookId" value="<%= books[i]._id %>">
+                                    <button href="#" class="btn btn-warning" type="submit">Trade</button>
+                                    <% } %>
+                                <% } %>
                             </form>
                         </div>
                     </div>
