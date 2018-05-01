@@ -32,19 +32,26 @@ function main(dbBooks, dbTrade) {
 
     router.post('/tradebook', ensureLogged, function (req, res, next) {
         const Books = dbBooks();
-        const bookId = new Books.ObjectID(req.body.bookId);
-        Books.findOne({
-            _id: bookId
-        }, function (err, result) {
-            if (err) 
-                return next(err);
-            if (result) 
-                dbTrade().insertOne({
-                    bookId,
-                    user: new Books.ObjectID(req.user.value._id)
-                });
-            res.redirect('/books/all');
-        });
+        if (req.body.cancel === 'true') {
+            dbTrade().deleteOne({ bookId: new Books.ObjectID(req.body.bookId) }, function (err, result) {
+                if (err) return next(err);
+                res.redirect('/books/all');
+            });
+        } else {
+            const bookId = new Books.ObjectID(req.body.bookId);
+            Books.findOne({
+                _id: bookId
+            }, function (err, result) {
+                if (err) 
+                    return next(err);
+                if (result) 
+                    dbTrade().insertOne({
+                        bookId,
+                        user: new Books.ObjectID(req.user.value._id)
+                    });
+                res.redirect('/books/all');
+            });
+        }
     });
 
     router.post('/newbook', ensureLogged, function (req, res) {
