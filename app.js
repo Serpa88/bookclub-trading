@@ -23,7 +23,8 @@ passport.use(new githubStrategy({
         githubName: profile.username
       }
     }, {
-      upsert: true
+      upsert: true,
+      returnOriginal: false
     }, function (err, user) {
       return cb(err, user);
     });
