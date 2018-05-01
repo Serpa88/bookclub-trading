@@ -14,7 +14,7 @@
                           <%= books[i].title %>
                       </p>
                       <p class="card-text"><%= books[i].description %></p>
-                      <% if (hasOwnProperty('user')) %>
+                      <% if (hasOwnProperty('user')) { %>
                       <input type="hidden" name="bookId" value="<%= books[i]._id %>">
                       <button href="#" class="btn btn-warning" type="submit">Trade</button>
                       <% } %>
