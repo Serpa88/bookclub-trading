@@ -1,4 +1,4 @@
-function main(dbBooks) {
+function main(dbBooks, dbTrade) {
     const express = require('express');
     const router = express.Router();
     const tools = require('../tools');
@@ -22,6 +22,18 @@ function main(dbBooks) {
         Books.deleteOne(query, function (err, result) {
             res.redirect('/account');
         })
+    });
+
+    router.post('/tradebook', ensureLogged, function (req, res, next) {
+        const Books = dbBooks();
+        const bookId = new Books.ObjectID(req.body.bookId);
+        Books.findOne({
+            _id: bookId
+        }, function (err, result) {
+            if (err) return next(err);
+            if (!result) return res.redirect('/books/all');
+            dbTrade.insertOne({ bookId, user: new Books.ObjectID(req.user.value._id) });
+        });
     });
 
     router.post('/newbook', ensureLogged, function (req, res) {
