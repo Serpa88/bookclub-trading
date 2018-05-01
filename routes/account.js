@@ -6,11 +6,17 @@ function main(dbBooks, dbTrade) {
 
     router.get('/', ensureLogged, function (req, res, next) {
         const Books = dbBooks();
-        Books.find({ user: new Books.ObjectID(req.user.value._id) })
-        .toArray(function (err, results) {
-            if (err) return next(err);
-            res.render('account', tools.addUser({books: results}, req.user));
-        });
+        Books
+            .find({
+                user: new Books.ObjectID(req.user.value._id)
+            })
+            .toArray(function (err, results) {
+                if (err) 
+                    return next(err);
+                res.render('account', tools.addUser({
+                    books: results
+                }, req.user));
+            });
     });
 
     router.post('/removebook', ensureLogged, function (req, res, next) {
@@ -30,9 +36,14 @@ function main(dbBooks, dbTrade) {
         Books.findOne({
             _id: bookId
         }, function (err, result) {
-            if (err) return next(err);
-            if (!result) return res.redirect('/books/all');
-            dbTrade().insertOne({ bookId, user: new Books.ObjectID(req.user.value._id) });
+            if (err) 
+                return next(err);
+            if (result) 
+                dbTrade().insertOne({
+                    bookId,
+                    user: new Books.ObjectID(req.user.value._id)
+                });
+            res.redirect('/books/all');
         });
     });
 
@@ -40,29 +51,29 @@ function main(dbBooks, dbTrade) {
         const title = req.body.title;
         if (!String.isNullOrWhitespace(title)) {
             const Books = dbBooks();
-            books
-                .search(title, function (error, results) {
-                    if (!error) {
-                        if (results.length > 0) {
-                            const closestResult = results.find((book) => {
-                                return book.thumbnail && book.description && book.title;
-                            });
-                            console.log(closestResult);
-                            if (!closestResult) return res.redirect('/account');
-                            const doc = {
-                                description: closestResult.description,
-                                thumbnail: closestResult.thumbnail,
-                                title: closestResult.title,
-                                user: new Books.ObjectID(req.user.value._id)
-                            };
-                            Books.insertOne(doc, function (err, result) {
-                                res.redirect('/account');
-                            });
-                        }
-                    } else {
-                        console.log(error);
+            books.search(title, function (error, results) {
+                if (!error) {
+                    if (results.length > 0) {
+                        const closestResult = results.find((book) => {
+                            return book.thumbnail && book.description && book.title;
+                        });
+                        console.log(closestResult);
+                        if (!closestResult) 
+                            return res.redirect('/account');
+                        const doc = {
+                            description: closestResult.description,
+                            thumbnail: closestResult.thumbnail,
+                            title: closestResult.title,
+                            user: new Books.ObjectID(req.user.value._id)
+                        };
+                        Books.insertOne(doc, function (err, result) {
+                            res.redirect('/account');
+                        });
                     }
-                });
+                } else {
+                    console.log(error);
+                }
+            });
         } else {
             res.redirect('/account');
         }
@@ -72,7 +83,9 @@ function main(dbBooks, dbTrade) {
 }
 module.exports = main;
 
-function ensureLogged (req, res, next) {
-    if (!req.user) res.redirect('/');
-    else next();
-}
+function ensureLogged(req, res, next) {
+    if (!req.user) 
+        res.redirect('/');
+    else 
+        next();
+    }
