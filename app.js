@@ -86,7 +86,10 @@ app.use('/account', require('./routes/account')(() => {
 app.use('/trades', require('./routes/trades')(() => { 
   dbTrade.ObjectID = mongo.ObjectID;
   return dbTrade;
- }))
+ }, () => {
+  dbBooks.ObjectID = mongo.ObjectID;
+  return dbBooks;
+}))
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
