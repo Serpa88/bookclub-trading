@@ -10,13 +10,26 @@
                         <div class="card">
                             <img class="card-img-top" src="<%= trades[i].Books[0].thumbnail %>" alt="Card image cap" style="width: 10%; margin: auto">
                             <div class="card-body">
-                                <h5 class="card-title"><%= trades[i].Books[0].title %></h5>
-                                <p class="card-text"><%= trades[i].Books[0].description %></p>
-                                <button href="#" class="btn btn-success">Accept</button>
-                                <button href="#" class="btn btn-danger">Decline</button>
+                                <h5 class="card-title">
+                                    <%= trades[i].Books[0].title %>
+                                </h5>
+                                <p class="card-text">
+                                    <%= trades[i].Books[0].description %>
+                                </p>
+                                <form style="display: inline-block" action="/trades/accept" method="POST">
+                                    <input type="hidden" name="tradeId" value="<%= trades[i]._id %>">
+                                    <button href="#" class="btn btn-success">Accept</button>
+                                </form>
+                                <form style="display: inline-block" action="/trades/decline" method="POST">
+                                    <input type="hidden" name="tradeId" value="<%= trades[i]._id %>">
+                                    <button href="#" class="btn btn-danger">Decline</button>
+                                </form>
                             </div>
                             <div class="card-footer">
-                                <small class="text-muted">Trade from <%= trades[i].User[0].githubName %> <img src="<%= trades[i].User[0].avatar_url %>" width="2%"></small>
+                                <small class="text-muted">Trade from
+                                    <%= trades[i].User[0].githubName %>
+                                        <img src="<%= trades[i].User[0].avatar_url %>" width="2%">
+                                </small>
                             </div>
                         </div>
                         <% } %>
