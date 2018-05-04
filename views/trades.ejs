@@ -8,7 +8,7 @@
                 <div class="card-deck">
                     <% for (var i = 0; i < trades.length; i++) { %>
                         <div class="card" style="display: block">
-                            <img class="card-img-top" src="<%= trades[i].Books[0].thumbnail %>" alt="Card image cap" style="width: 10%; margin: auto">
+                            <img class="card-img-top" src="<%= trades[i].Books[0].thumbnail %>" alt="Card image cap" style="width: 10%; margin-left: 39%">
                             <->
                             <img class="card-img-top" src="<%= trades[i].offered_book[0].thumbnail %>" alt="Card image cap" style="width: 10%; margin: auto">
                             <div class="card-body">
@@ -18,11 +18,11 @@
                                 <p class="card-text">
                                     <%= trades[i].Books[0].description %>
                                 </p>
-                                <form class="inline-block" action="/trades/accept" method="POST">
+                                <form style="display: inline-block" action="/trades/accept" method="POST">
                                     <input type="hidden" name="tradeId" value="<%= trades[i]._id %>">
                                     <button href="#" class="btn btn-success">Accept</button>
                                 </form>
-                                <form class="inline-block" action="/trades/decline" method="POST">
+                                <form style="display: inline-block" action="/trades/decline" method="POST">
                                     <input type="hidden" name="tradeId" value="<%= trades[i]._id %>">
                                     <button href="#" class="btn btn-danger">Decline</button>
                                 </form>
