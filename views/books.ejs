@@ -28,7 +28,7 @@
                                         </p>
                                         <input type="hidden" name="bookId" value="<%= books[i]._id %>">
                                         <% for (var x = 0; x < myBooks.length; x++) { %>
-                                            <form class="inline-block" action="/trades/tradebook" method="POST">
+                                            <form style="display: inline-block" action="/trades/tradebook" method="POST">
                                                 <input type="hidden" name="myBook" value="<%= myBooks[x]._id %>">
                                                 <img src="<%= myBooks[x].thumbnail %>" style="width: 5%;">
                                             </form>
