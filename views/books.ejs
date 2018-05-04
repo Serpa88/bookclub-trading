@@ -9,24 +9,32 @@
                     <div class="card justify-content-center" style="margin: auto">
                         <img class="card-img-top img-thumbnail rounded mx-auto d-block" src="<%= books[i].thumbnail %>" style="width: 10%">
                         <div class="card-body">
-                            <form action="/trades/tradebook" method="POST">
-                                <p class="card-title" style="font-weight: bold;">
-                                    <%= books[i].title %>
-                                </p>
-                                <p class="card-text">
-                                    <%= books[i].description %>
-                                </p>
-                                <% if (hasOwnProperty('user')) { %>
-                                    <% if (books[i].Trades && books[i].Trades.length > 0) { %>
+                            <p class="card-title" style="font-weight: bold;">
+                                <%= books[i].title %>
+                            </p>
+                            <p class="card-text">
+                                <%= books[i].description %>
+                            </p>
+                            <% if (hasOwnProperty('user')) { %>
+                                <% if (books[i].Trades && books[i].Trades.length > 0) { %>
+                                    <form action="/trades/tradebook" method="POST">
                                         <input type="hidden" name="bookId" value="<%= books[i]._id %>">
                                         <input type="hidden" name="cancel" value="true">
                                         <button href="#" class="btn btn-danger" type="submit">Cancel Trade</button>
+                                    </form>
                                     <% } else { %>
-                                    <input type="hidden" name="bookId" value="<%= books[i]._id %>">
-                                    <button href="#" class="btn btn-warning" type="submit">Trade</button>
-                                    <% } %>
-                                <% } %>
-                            </form>
+                                        <p class="card-title" style="font-weight: bold;">
+                                            Offer trade for my book:
+                                        </p>
+                                        <input type="hidden" name="bookId" value="<%= books[i]._id %>">
+                                        <% for (var x = 0; x < myBooks.length; x++) { %>
+                                            <form class="inline-block" action="/trades/tradebook" method="POST">
+                                                <input type="hidden" name="myBook" value="<%= myBooks[x]._id %>">
+                                                <img src="<%= myBooks[x].thumbnail %>" style="width: 5%;">
+                                            </form>
+                                            <% } %>
+                                                <% } %>
+                                                    <% } %>
                         </div>
                     </div>
                 </div>

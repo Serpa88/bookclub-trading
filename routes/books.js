@@ -34,10 +34,16 @@ module.exports = function (dbBooks, dbTrade) {
                     .toArray(function (err, result) {
                         if (err) 
                             return next(err);
-                        console.log(result);
-                        res.render('books', tools.addUser({
-                            books: result
-                        }, req.user));
+                        Books
+                            .find({user: userId})
+                            .toArray(function (err, myBooks) {
+                                if (err) 
+                                    return next(err);
+                                res.render('books', tools.addUser({
+                                    books: result,
+                                    myBooks
+                                }, req.user));
+                            });
                     });
             } else {
                 Books

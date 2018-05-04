@@ -16,16 +16,30 @@ module.exports = function (dbTrade, dbBooks) {
                 });
         } else {
             const bookId = new Books.ObjectID(req.body.bookId);
+            const myBookId = new Books.ObjectID(req.body.myBook);
+            const userId = new Books.ObjectID(req.user.value._id);
             Books.findOne({
                 _id: bookId
             }, function (err, result) {
                 if (err) 
                     return next(err);
-                if (result) 
-                    dbTrade().insertOne({
-                        bookId,
-                        user: new Books.ObjectID(req.user.value._id)
-                    });
+                if (result) {
+                    Books
+                        .findOne({
+                            user: userId,
+                            _id: myBookId
+                        }, function (err, myBook) {
+                            if (err) 
+                                return next(err);
+                            if (myBook) 
+                                dbTrade().insertOne({
+                                    bookId,
+                                    offeredBook: myBookId,
+                                    user: new Books.ObjectID(req.user.value._id)
+                                });
+                            }
+                        );
+                }
                 res.redirect('/books/all');
             });
         }
@@ -54,6 +68,7 @@ module.exports = function (dbTrade, dbBooks) {
                     ],
                     as: 'Books'
                 })
+                .lookup({from: 'Books', localField: 'offeredBook', foreignField: '_id', as: 'offered_book'})
                 .lookup({from: 'Users', localField: 'user', foreignField: '_id', as: 'User'})
                 .match({
                     user: {
