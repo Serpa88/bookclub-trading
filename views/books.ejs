@@ -30,7 +30,7 @@
                                         <% for (var x = 0; x < myBooks.length; x++) { %>
                                             <form style="display: inline-block" action="/trades/tradebook" method="POST">
                                                 <input type="hidden" name="myBook" value="<%= myBooks[x]._id %>">
-                                                <img src="<%= myBooks[x].thumbnail %>" style="width: 5%;">
+                                                <button type="submit" style="background: none; border: none"><img src="<%= myBooks[x].thumbnail %>" style="width: 60%;"></button>
                                             </form>
                                             <% } %>
                                                 <% } %>
