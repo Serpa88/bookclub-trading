@@ -90,14 +90,15 @@ module.exports = function (dbTrade, dbBooks) {
                                     parallelFunction(Books, myBook._id, trade.user),
                                     parallelFunction(Books, trade.offeredBook, myBookUser._id)
                                 ], function (err, results) {
-                                    Trades
-                                        .deleteOne({
-                                            _id: tradeId
-                                        }, function (err, result) {
-                                            if (err) 
-                                                return next(err);
-                                            res.redirect('/trades');
-                                        });
+                                    Trades.deleteMany({
+                                        $or: [
+                                            {
+                                                bookId: myBook._id
+                                            }, {
+                                                offeredBook: trade.offeredBook
+                                            }
+                                        ]
+                                    })
                                 });
                         }
                     } else 
@@ -112,7 +113,8 @@ module.exports = function (dbTrade, dbBooks) {
             Trades.deleteOne({
                 _id: tradeId
             }, function (err, result) {
-                if (err) return next(err);
+                if (err) 
+                    return next(err);
                 res.redirect('/trades');
             });
         });
