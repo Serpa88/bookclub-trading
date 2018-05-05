@@ -90,7 +90,10 @@ module.exports = function (dbTrade, dbBooks) {
                                     parallelFunction(Books, myBook._id, trade.user),
                                     parallelFunction(Books, trade.offeredBook, myBookUser._id)
                                 ], function (err, results) {
-                                    res.redirect('/trades');
+                                    Trades.deleteOne({ _id: tradeId }, function (err, result) {
+                                        if (err) return next(err);
+                                        res.redirect('/trades');
+                                    });
                                 });
                         }
                     } else 
