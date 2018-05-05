@@ -2,6 +2,7 @@ module.exports = function (dbTrade, dbBooks) {
     const express = require('express');
     const router = express.Router();
     const {addUser, ensureLogged} = require('../tools');
+    const async = require('async');
 
     router.post('/tradebook', ensureLogged, function (req, res, next) {
         const Books = dbBooks();
@@ -45,44 +46,111 @@ module.exports = function (dbTrade, dbBooks) {
         }
     });
 
-    router.get('/', ensureLogged, function (req, res, next) {
-        const Trade = dbTrade();
-        const userID = new Trade.ObjectID(req.user.value._id);
-        Trade
+    router.post('/accept', ensureLogged, function (req, res, next) {
+        const Books = dbBooks();
+        const Trades = dbTrade();
+        const tradeId = new Books.ObjectID(req.body.tradeId);
+        const userId = new Books.ObjectID(req.user.value._id);
+        Trades
             .aggregate()
             .lookup({
-                    from: 'Books',
+                    from: "Books",
                     let: {
-                        book_id: '$bookId'
+                        mybook: "$bookId"
                     },
                     pipeline: [
                         {
                             $match: {
-                                user: userID,
                                 $expr: {
-                                    $eq: ["$_id", "$$book_id"]
+                                    $eq: ["$_id", "$$mybook"]
                                 }
                             }
+                        }, {
+                            $lookup: {
+                                from: "Users",
+                                localField: "user",
+                                foreignField: "_id",
+                                as: "Users"
+                            }
                         }
-
                     ],
-                    as: 'Books'
+                    as: "MyBook"
                 })
-                .lookup({from: 'Books', localField: 'offeredBook', foreignField: '_id', as: 'offered_book'})
-                .lookup({from: 'Users', localField: 'user', foreignField: '_id', as: 'User'})
-                .match({
-                    user: {
-                        $ne: userID
-                    }
-                })
+                .match({_id: tradeId})
                 .toArray(function (err, results) {
                     if (err) 
                         return next(err);
-                    res.render('trades', addUser({
-                        trades: results
-                    }, req.user));
-                });
+                    if (results) {
+                        const trade = results[0];
+                        const myBook = trade.MyBook[0];
+                        const myBookUser = myBook.Users[0];
+                        if (myBookUser._id.equals(userId)) {
+                            async
+                                .parallel([
+                                    parallelFunction(Books, myBook._id, trade.user),
+                                    parallelFunction(Books, trade.offeredBook, myBookUser._id)
+                                ], function (err, results) {
+                                    res.redirect('/trades');
+                                });
+                        }
+                    } else 
+                        res.redirect('/trades');
+                    }
+                );
         });
 
-        return router;
-    }
+        router.get('/', ensureLogged, function (req, res, next) {
+            const Trade = dbTrade();
+            const userID = new Trade.ObjectID(req.user.value._id);
+            Trade
+                .aggregate()
+                .lookup({
+                        from: 'Books',
+                        let: {
+                            book_id: '$bookId'
+                        },
+                        pipeline: [
+                            {
+                                $match: {
+                                    user: userID,
+                                    $expr: {
+                                        $eq: ["$_id", "$$book_id"]
+                                    }
+                                }
+                            }
+
+                        ],
+                        as: 'Books'
+                    })
+                    .lookup({from: 'Books', localField: 'offeredBook', foreignField: '_id', as: 'offered_book'})
+                    .lookup({from: 'Users', localField: 'user', foreignField: '_id', as: 'User'})
+                    .match({
+                        user: {
+                            $ne: userID
+                        }
+                    })
+                    .toArray(function (err, results) {
+                        if (err) 
+                            return next(err);
+                        res.render('trades', addUser({
+                            trades: results
+                        }, req.user));
+                    });
+            });
+
+            return router;
+        }
+
+        function parallelFunction(Books, bookId, newUser) {
+            return function (cb) {
+                Books.updateOne({
+                    _id: bookId
+                }, {
+                    $set: {
+                        user: newUser
+                    }
+                }, function (err, update) {
+                    cb();
+                });
+            };
+        }
