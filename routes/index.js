@@ -4,8 +4,7 @@ var tools = require('../tools');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  console.log(req.user);
-  res.render('index', tools.addUser({ title: 'Express' }, req.user));
+  res.redirect('/books/all');
 });
 
 module.exports = router;
