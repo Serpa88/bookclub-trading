@@ -98,7 +98,10 @@ module.exports = function (dbTrade, dbBooks) {
                                                 offeredBook: trade.offeredBook
                                             }
                                         ]
-                                    })
+                                    }, function (err, result) {
+                                        if (err) return next(err);
+                                        res.redirect('/trades');
+                                    });
                                 });
                         }
                     } else 
