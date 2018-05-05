@@ -90,16 +90,31 @@ module.exports = function (dbTrade, dbBooks) {
                                     parallelFunction(Books, myBook._id, trade.user),
                                     parallelFunction(Books, trade.offeredBook, myBookUser._id)
                                 ], function (err, results) {
-                                    Trades.deleteOne({ _id: tradeId }, function (err, result) {
-                                        if (err) return next(err);
-                                        res.redirect('/trades');
-                                    });
+                                    Trades
+                                        .deleteOne({
+                                            _id: tradeId
+                                        }, function (err, result) {
+                                            if (err) 
+                                                return next(err);
+                                            res.redirect('/trades');
+                                        });
                                 });
                         }
                     } else 
                         res.redirect('/trades');
                     }
                 );
+        });
+
+        router.post('/decline', ensureLogged, function (req, res, next) {
+            const Trades = dbTrade();
+            const tradeId = new Books.ObjectID(req.body.tradeId);
+            Trades.deleteOne({
+                _id: tradeId
+            }, function (err, result) {
+                if (err) return next(err);
+                res.redirect('/trades');
+            });
         });
 
         router.get('/', ensureLogged, function (req, res, next) {
@@ -146,14 +161,15 @@ module.exports = function (dbTrade, dbBooks) {
 
         function parallelFunction(Books, bookId, newUser) {
             return function (cb) {
-                Books.updateOne({
-                    _id: bookId
-                }, {
-                    $set: {
-                        user: newUser
-                    }
-                }, function (err, update) {
-                    cb();
-                });
+                Books
+                    .updateOne({
+                        _id: bookId
+                    }, {
+                        $set: {
+                            user: newUser
+                        }
+                    }, function (err, update) {
+                        cb();
+                    });
             };
         }
