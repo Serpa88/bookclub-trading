@@ -108,7 +108,7 @@ module.exports = function (dbTrade, dbBooks) {
 
         router.post('/decline', ensureLogged, function (req, res, next) {
             const Trades = dbTrade();
-            const tradeId = new Books.ObjectID(req.body.tradeId);
+            const tradeId = new Trades.ObjectID(req.body.tradeId);
             Trades.deleteOne({
                 _id: tradeId
             }, function (err, result) {
