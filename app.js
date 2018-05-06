@@ -82,7 +82,10 @@ app.use('/books', require('./routes/books')(() => {
 app.use('/account', require('./routes/account')(() => {
   dbBooks.ObjectID = mongo.ObjectID;
   return dbBooks;
-}, () => dbTrade, () => {
+}, () => {
+  dbTrade.ObjectID = mongo.ObjectID;
+  return dbTrade;
+}, () => {
   dbUser.ObjectID = mongo.ObjectID;
   return dbUser;
 }));

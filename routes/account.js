@@ -54,12 +54,29 @@ function main(dbBooks, dbTrade, dbUser) {
 
     router.post('/removebook', ensureLogged, function (req, res, next) {
         const Books = dbBooks();
+        const bookId = new Books.ObjectID(req.body.bookId);
         const query = {
             user: new Books.ObjectID(req.user._id),
-            _id: new Books.ObjectID(req.body.bookId)
+            _id: bookId
         };
+        const Trades = dbTrade();
         Books.deleteOne(query, function (err, result) {
-            res.redirect('/account');
+            if (err) 
+                return next(err);
+            Trades
+                .deleteMany({
+                    $or: [
+                        {
+                            bookId: bookId
+                        }, {
+                            offeredBook: bookId
+                        }
+                    ]
+                }, function (err, result) {
+                    if (err) 
+                        return next(err);
+                    res.redirect('/account');
+                });
         })
     });
 
