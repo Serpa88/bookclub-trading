@@ -6,7 +6,7 @@ module.exports = function (dbBooks, dbTrade) {
     router.get('/all', function (req, res, next) {
         const Books = dbBooks();
         if (req.user) {
-            const userId = new Books.ObjectID(req.user.value._id);
+            const userId = new Books.ObjectID(req.user._id);
             Books
                 .aggregate()
                 .lookup({

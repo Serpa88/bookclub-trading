@@ -18,7 +18,7 @@ module.exports = function (dbTrade, dbBooks) {
         } else {
             const bookId = new Books.ObjectID(req.body.bookId);
             const myBookId = new Books.ObjectID(req.body.myBook);
-            const userId = new Books.ObjectID(req.user.value._id);
+            const userId = new Books.ObjectID(req.user._id);
             Books.findOne({
                 _id: bookId
             }, function (err, result) {
@@ -36,7 +36,7 @@ module.exports = function (dbTrade, dbBooks) {
                                 dbTrade().insertOne({
                                     bookId,
                                     offeredBook: myBookId,
-                                    user: new Books.ObjectID(req.user.value._id)
+                                    user: new Books.ObjectID(req.user._id)
                                 });
                             }
                         );
@@ -50,7 +50,7 @@ module.exports = function (dbTrade, dbBooks) {
         const Books = dbBooks();
         const Trades = dbTrade();
         const tradeId = new Books.ObjectID(req.body.tradeId);
-        const userId = new Books.ObjectID(req.user.value._id);
+        const userId = new Books.ObjectID(req.user._id);
         Trades
             .aggregate()
             .lookup({
@@ -124,7 +124,7 @@ module.exports = function (dbTrade, dbBooks) {
 
         router.get('/', ensureLogged, function (req, res, next) {
             const Trade = dbTrade();
-            const userID = new Trade.ObjectID(req.user.value._id);
+            const userID = new Trade.ObjectID(req.user._id);
             Trade
                 .aggregate()
                 .lookup({

@@ -7,15 +7,9 @@ function main(dbBooks, dbTrade, dbUser) {
     router.get('/', ensureLogged, function (req, res, next) {
         const Books = dbBooks();
         console.log(req.user);
-        let user;
-        if (req.user.value) {
-            user = req.user.value;
-        } else {
-            user = req.user;
-        }
         Books
             .find({
-                user: new Books.ObjectID(user._id)
+                user: new Books.ObjectID(req.user._id)
             })
             .toArray(function (err, results) {
                 if (err) 
@@ -33,7 +27,7 @@ function main(dbBooks, dbTrade, dbUser) {
         if (fullName && city && state) {
             const Users = dbUser();
             Users.updateOne({
-                _id: new Users.ObjectID(req.user.value._id)
+                _id: new Users.ObjectID(req.user._id)
             }, {
                 $set: {
                     fullName,
@@ -45,7 +39,7 @@ function main(dbBooks, dbTrade, dbUser) {
                     return next(err);
                 req
                     .login({
-                        ...req.user.value,
+                        ...req.user,
                         fullName,
                         city,
                         state
@@ -61,7 +55,7 @@ function main(dbBooks, dbTrade, dbUser) {
     router.post('/removebook', ensureLogged, function (req, res, next) {
         const Books = dbBooks();
         const query = {
-            user: new Books.ObjectID(req.user.value._id),
+            user: new Books.ObjectID(req.user._id),
             _id: new Books.ObjectID(req.body.bookId)
         };
         Books.deleteOne(query, function (err, result) {
@@ -86,7 +80,7 @@ function main(dbBooks, dbTrade, dbUser) {
                             description: closestResult.description,
                             thumbnail: closestResult.thumbnail,
                             title: closestResult.title,
-                            user: new Books.ObjectID(req.user.value._id)
+                            user: new Books.ObjectID(req.user._id)
                         };
                         Books.insertOne(doc, function (err, result) {
                             res.redirect('/account');
