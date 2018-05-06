@@ -26,7 +26,7 @@ passport.use(new githubStrategy({
       upsert: true,
       returnOriginal: false
     }, function (err, user) {
-      return cb(err, user);
+      return cb(err, user.value);
     });
 }));
 
