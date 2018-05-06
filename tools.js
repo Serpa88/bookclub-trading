@@ -1,6 +1,12 @@
 function addUser(object, user) {
     if (user) {
-        object.user = user.value;
+        let userObj;
+        if (user.value) {
+            userObj = req.user.value;
+        } else {
+            userObj = req.user;
+        }
+        object.user = userObj;
     }
     return object;
 }
