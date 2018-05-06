@@ -19,21 +19,34 @@ function main(dbBooks, dbTrade, dbUser) {
             });
     });
 
-    router.post('/info', ensureLogged, function(req, res, next) {
+    router.post('/info', ensureLogged, function (req, res, next) {
         const fullName = req.body.fullName;
         const city = req.body.city;
         const state = req.body.state;
         if (fullName && city && state) {
             const Users = dbUser();
-            Users.updateOne({ _id: new Users.ObjectID(req.user.value._id) }, {
+            Users.updateOne({
+                _id: new Users.ObjectID(req.user.value._id)
+            }, {
                 $set: {
                     fullName,
                     city,
                     state
                 }
             }, function (err, result) {
-                if (err) return next(err);
-                res.redirect('/account');
+                if (err) 
+                    return next(err);
+                req
+                    .login({
+                        ...req.user.value,
+                        fullName,
+                        city,
+                        state
+                    }, function (err) {
+                        if (err) 
+                            return next(err);
+                        res.redirect('/account');
+                    });
             });
         }
     });
