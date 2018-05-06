@@ -6,9 +6,16 @@ function main(dbBooks, dbTrade, dbUser) {
 
     router.get('/', ensureLogged, function (req, res, next) {
         const Books = dbBooks();
+        console.log(req.user);
+        let user;
+        if (req.user.value) {
+            user = req.user.value;
+        } else {
+            user = req.user;
+        }
         Books
             .find({
-                user: new Books.ObjectID(req.user.value._id)
+                user: new Books.ObjectID(user._id)
             })
             .toArray(function (err, results) {
                 if (err) 
