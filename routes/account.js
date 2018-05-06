@@ -1,4 +1,4 @@
-function main(dbBooks, dbTrade) {
+function main(dbBooks, dbTrade, dbUser) {
     const express = require('express');
     const router = express.Router();
     const {addUser, ensureLogged} = require('../tools');
@@ -17,6 +17,25 @@ function main(dbBooks, dbTrade) {
                     books: results
                 }, req.user));
             });
+    });
+
+    router.post('/info', ensureLogged, function(req, res, next) {
+        const fullName = req.body.fullName;
+        const city = req.body.city;
+        const state = req.body.state;
+        if (fullName && city && state) {
+            const Users = dbUser();
+            Users.updateOne({ _id: new Users.ObjectID(req.user.value._id) }, {
+                $set: {
+                    fullName,
+                    city,
+                    state
+                }
+            }, function (err, result) {
+                if (err) return next(err);
+                res.redirect('/account');
+            });
+        }
     });
 
     router.post('/removebook', ensureLogged, function (req, res, next) {
